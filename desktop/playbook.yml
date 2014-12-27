@@ -1,0 +1,25 @@
+---
+- hosts: host
+  sudo: yes
+  vars:
+    username:
+    userpass:
+  tasks:
+    # - name: add my user
+    #   user: name={{username}} password={{userpass}}
+
+    - name: apt-get update
+      apt: update_cache=yes
+
+    - name: install xmonad
+      apt: name=xmonad state=present
+      apt: name=xmobar state=present
+      apt: name=suckless-tools state=present
+
+- hosts: host
+  sudo: yes
+  tasks:
+    - name: install gui 
+      apt: name=ubuntu-desktop state=present
+
+
