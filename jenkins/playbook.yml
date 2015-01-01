@@ -1,0 +1,23 @@
+---
+- hosts: master
+  sudo: yes
+  tasks:
+    - name: install open-jdk-7
+      apt: name=openjdk-7-jdk state=present
+    - name: add apt-key for jenkins
+      apt_key: url=http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key state=present
+    - name: add repository for jenkins
+      apt_repository: repo='deb http://pkg.jenkins-ci.org/debian binary/' state=present
+    - name: install jenkins
+      apt: pkg=jenkins state=present update_cache=yes
+
+- hosts: slave
+  sudo: yes
+  tasks:
+    - name: add my user
+      user: name=jenkins
+    - name: make working directory
+      file: path=/home/jenkins/workspace/ state=directory
+    - name: install open-jdk-7
+      apt: name=openjdk-7-jdk state=present
+ 
