@@ -1,0 +1,34 @@
+---
+- hosts: host
+  sudo: yes
+  tasks:
+#    - name: apt-get update
+#      apt: update_cache=yes
+
+    - name: install xmonad
+      apt: name=xmonad state=present
+    - name: insall xmobar
+      apt: name=xmobar state=present
+    - name: install qmenu
+      apt: name=suckless-tools state=present
+
+    - name: install vim
+      apt: name=vim state=present
+
+    - name: install VirtualBox
+      apt: name=virtualbox state=present
+
+    - name: install vagrant
+      apt: name=vagrant state=present
+
+    - name: install git
+      apt: name=git state=present
+
+    - name: install chromium
+      apt: name=chromium-browser state=present
+
+    - name: install gdebi
+      apt: name=gdebi state=present
+
+    - name: install skk
+      apt: name=ibus-skk state=present
