@@ -1,0 +1,5 @@
+---
+- name: local_test
+  hosts: local
+  roles:
+    - mysql

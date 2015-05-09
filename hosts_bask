@@ -1,0 +1,5 @@
+[env_server]
+gohara@tk2-217-18445.vs.sakura.ne.jp:20220
+
+[local]
+vagrant@192.168.50.10

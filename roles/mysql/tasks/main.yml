@@ -1,0 +1,16 @@
+---
+- name: set password
+  debconf: name='mysql-server-5.5' question='mysql-server/root_password' value='{{ sql_pass }}' vtype='select'
+  sudo: yes
+- name: set password_again
+  debconf: name='mysql-server-5.5' question='mysql-server/root_password_again' value='{{ sql_pass }}' vtype='select'
+  sudo: yes
+
+- name: install
+  apt: name={{item}}
+  with_items:
+    - apache2
+    - libapache2-mod-passenger
+    - mysql-server
+    - mysql-client
+  sudo: yes

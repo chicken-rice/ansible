@@ -1,0 +1,54 @@
+---
+#- name: set redmine config
+#  debconf: name='redmine' question='redmine/current-instances' value='default' vtype='string'
+#  sudo: yes
+#- name: mysql
+#  debconf: name='redmine' question='redmine/instances/default/database-type' value='mysql' vtype='select'
+#  sudo: yes
+#- name: set redmine password
+#  debconf: name='redmine' question='redmine/instances/default/mysql/app_pass' value='{{ sql_pass }}' vtype='select'
+#  sudo: yes
+#- name: set redmine password
+#  debconf: name='redmine' question='redmine/instances/default/mysql/admin_pass' value='{{ sql_pass }}' vtype='select'
+#  sudo: yes
+#- name: install redmine
+#  apt: name={{ item }}
+#  with_items:
+#    - ruby-rack
+#    - redmine
+#    - redmine-mysql
+#  sudo: yes
+- name: copy config
+  command: cp -iv 000-default.conf redmine.conf chdir=/etc/apache2/sites-available creates=redmine.conf
+  sudo: yes
+- name: change port
+  lineinfile: dest=/etc/apache2/sites-available/redmine.conf regexp="<VirtualHost" line="<VirtualHost *:8000>"
+  sudo: yes
+- name: set server name
+  lineinfile: dest=/etc/apache2/sites-available/redmine.conf regexp="ServerName" insertafter="ServerAdmin" line="\tServerName redmine"
+  sudo: yes
+- name: change Documents root
+  lineinfile: dest=/etc/apache2/sites-available/redmine.conf regexp="DocumentRoot" line="\tDocumentRoot /usr/share/redmine/public"
+  sudo: yes
+- name: change listen port
+  lineinfile: dest=/etc/apache2/ports.conf regexp="Listen 8000" line="Listen 8000"
+  sudo: yes
+- name: set PassengerDefaultUser 
+  lineinfile: dest=/etc/apache2/mods-available/passenger.conf regexp="PassengerDefaultUser" insertafter="PassengerDefaultRuby" line="  PassengerDefaultUser www-data"
+  sudo: yes
+- name: install gem
+  apt: name=gem
+  sudo: yes
+- name: install bundler
+  gem: name=bundler
+  sudo: yes
+- name: chmod redmine
+  command: chmod 777 /usr/share/redmine creates=/usr/share/redmine/.bundle
+  sudo: yes
+- name: install by bundler
+  command: bundler install --without development test rmagick postgresql sqlite chdir=/usr/share/redmine/public creates=../.bundle
+- name: chmod redmine
+  file: path=/usr/share/redmine mode=0755
+  sudo: yes
+
+

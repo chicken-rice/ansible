@@ -1,0 +1,5 @@
+---
+- name: FLCL_SERVER
+  hosts: env_server
+  roles:
+    - redmine
